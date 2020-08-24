@@ -27,7 +27,7 @@ exports.handler = async function (event, context) {
         color: {
           rgb: {
             ...COLOR.rgb().object(),
-            label: COLOR.rgb().string(0)
+            label: COLOR.rgb().string(0),
           },
           hex: COLOR.hex(),
           hsl: COLOR.hsl().string(0),
@@ -35,9 +35,17 @@ exports.handler = async function (event, context) {
         },
       }
     })
-    console.info(images)
+    const headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Max-Age': '2592000',
+      'Access-Control-Allow-Credentials': 'true',
+    };
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ images }),
     }
   } catch (err) {

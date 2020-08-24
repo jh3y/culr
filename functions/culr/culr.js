@@ -16,7 +16,7 @@ const grabImages = async (keyword) => {
   return images
 }
 
-exports.handler = async function (event, context) {
+exports.handler = async function (event, context, callback) {
   try {
     const SEARCH_TERM = event.queryStringParameters.search
     let images = await grabImages(SEARCH_TERM)
@@ -37,17 +37,18 @@ exports.handler = async function (event, context) {
     })
     const headers = {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      'Access-Control-Allow-Headers':
+        'Origin, X-Requested-With, Content-Type, Accept',
       'Content-Type': 'application/json',
       'Access-Control-Allow-Methods': '*',
       'Access-Control-Max-Age': '2592000',
       'Access-Control-Allow-Credentials': 'true',
-    };
-    return {
+    }
+    callback(null, {
       statusCode: 200,
       headers,
       body: JSON.stringify({ images }),
-    }
+    })
   } catch (err) {
     console.log(err) // output to netlify function log
     return {

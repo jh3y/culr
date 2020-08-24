@@ -56,7 +56,6 @@ const useColorSearch = () => {
     if (!keyword) return
     const data = await (await (await fetch(`${URL}/?search=${keyword}`)).json())
       .images
-    console.info(data)
     dispatch({ type: ACTIONS.SEARCH_RESULTS, data })
   }
   useEffect(() => {

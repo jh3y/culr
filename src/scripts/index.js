@@ -92,8 +92,6 @@ const App = () => {
   const formRef = useRef(null)
   const [data, searching, search, copy] = useColorSearch()
 
-  // const data = new Array(12).fill().map(() => ({ color: { hex: 'red' } }))
-
   const unset = () => {
     setSelected(null)
     search(keyword)
@@ -150,13 +148,15 @@ const App = () => {
       }
       gsap
         .timeline({ onStart })
-        .to(selectedRef.current, ANIM_SPEED, {
+        .to(selectedRef.current, {
+          duration: ANIM_SPEED,
           '--t': -10,
           '--r': -10,
           '--b': -10,
           '--l': -10,
         })
-        .to(selectedImageRef.current, ANIM_SPEED, {
+        .to(selectedImageRef.current, {
+          duration: ANIM_SPEED,
           opacity: 1,
         })
     }
@@ -172,8 +172,12 @@ const App = () => {
     }
     gsap
       .timeline({ onComplete })
-      .to(selectedImageRef.current, ANIM_SPEED, { opacity: 0 })
-      .to(selectedRef.current, ANIM_SPEED, {
+      .to(selectedImageRef.current, {
+        duration: ANIM_SPEED / 2,
+        opacity: 0,
+      })
+      .to(selectedRef.current, {
+        duration: ANIM_SPEED / 2,
         '--t': colorPos.top,
         '--r': colorPos.right,
         '--b': colorPos.bottom,

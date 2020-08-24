@@ -1,0 +1,302 @@
+*
+  box-sizing border-box
+
+body
+  margin 0
+  padding 0
+  overflow-x hidden
+  font-family 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif
+
+.input-container
+  display inline-grid
+  grid-template-columns auto 60px
+  margin 0
+  height 60px
+  margin 1rem 0
+  width 100%
+
+  &:hover
+    [disabled]
+      border-color #ddd
+
+    input
+      border-color #111
+
+      ~ button
+        border-color #111
+
+        .search__glass
+          border-color #111
+
+          &:after
+            background #111
+
+input
+  box-sizing border-box
+  cursor pointer
+  padding 0 24px
+  font-size 18px
+  border 2px solid #aaa
+  border-radius 10px 0 0 10px
+  outline transparent
+  transition border-color .25s ease, color .25s ease
+
+  &::placeholder
+    color #aaa
+
+
+  &:hover
+  &:active
+  &:focus
+    border-color #111
+
+    ~ button
+      border-color #111
+
+      .search__glass
+        border-color #111
+        transition border-color 0.25s ease
+
+        &:after
+          background #111
+          transition background 0.25s ease
+
+  &[disabled]
+  &:hover[disabled]
+    border-color #ddd
+    color #ddd
+
+    ~ button
+      border-color #ddd
+
+      .search__glass
+        border-color transparent
+
+.input-container__button
+  cursor pointer
+  width 60px
+  outline transparent
+  border-radius 0 10px 10px 0
+  position relative
+  border 2px solid #aaa
+  border-left-width 0
+  transition border-color 0.25s ease
+  background transparent
+
+  &:hover[disabled] .search__glass
+    border-color transparent
+
+  &[disabled] .search__prongs
+    opacity 1
+    transition opacity .25s .25s ease
+
+  &[disabled] .search__glass
+    transform translate(0, 0)
+    border-color transparent
+    transition border-color 0.25s ease, transform 0.25s ease
+
+  &[disabled] .search__glass:after
+    background transparent
+    transition background 0.25s ease, transform 0.25s ease
+    transform translate(-50%, 0) rotate(-45deg) translate(0, 100%) scaleY(0)
+
+.search
+  height 24px
+  width 24px
+  border-radius 100%
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+
+  &__glass
+    border-radius 100%
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    left 0
+    border 4px solid #aaa
+    transition border-color 0.25s ease, transform 0.25s ease
+    transform translate(-10%, -10%)
+
+    &:after
+      content ''
+      position absolute
+      height 12px
+      top 50%
+      left 50%
+      background #aaa
+      transition background 0.25s ease, transform 0.25s ease
+      width 4px
+      transform-origin top center
+      transform translate(-50%, 0) rotate(-45deg) translate(0, 95%) scaleY(1)
+      border-radius 0 0 2px 2px
+
+  &__prongs
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    left 0
+    animation rotate 1s infinite linear
+    opacity 0
+    transition opacity .25s ease
+
+    > div
+      for $prong in (1..10)
+        &:nth-of-type({$prong})
+          height 2px
+          width 2px
+          background #222
+          position absolute
+          top 50%
+          left 50%
+          transform translate(-50%, -50%) rotate($prong * 36deg) translate(0, 10px)
+
+@keyframes rotate
+  to
+    transform rotate(360deg)
+
+#app
+  display flex
+  justify-content center
+  align-items center
+  min-height 100vh
+
+.colors
+  min-height 250px
+  display grid
+  align-items center
+  justify-content center
+  grid-template-columns repeat(3, auto)
+  grid-gap 4px
+  transition opacity .25s ease, filter .25s ease
+  position relative
+
+  &:empty
+    min-height 0
+
+  &--searching
+    filter grayscale(1)
+
+.color
+  background-color var(--color)
+  position relative
+  height 100px
+  width 100px
+  cursor pointer
+  overflow hidden
+  text-transform uppercase
+  transition transform 0.1s ease
+  border-radius 10px
+
+  &:hover
+    transform scale(0.9)
+
+  &__close
+    cursor pointer
+    position absolute
+    top 5px
+    right 5px
+    height 44px
+    border 0
+    background transparent
+    width 44px
+    svg
+      position absolute
+      top 50%
+      left 50%
+      transform translate(-50%, -50%)
+      width 30px
+      height 30px
+      path
+        fill #fff
+
+  &--selected
+    border-radius 10px
+    position absolute
+    color #FFFFFF
+    overflow hidden
+    background var(--color)
+    opacity 0
+    top 0
+    right 0
+    bottom 0
+    left 0
+    font-weight bold
+    display flex
+    flex-direction column
+    justify-content flex-end
+    align-items flex-end
+    padding 1rem
+    z-index -1
+    $clip = inset(calc(var(--t) * 1px) calc(var(--r) * 1px) calc(var(--b) * 1px) calc(var(--l) * 1px))
+    -webkit-clip-path $clip
+    clip-path $clip
+
+    a
+    button
+      color #FFF
+
+
+    &-dark
+      color #111
+
+      a
+      button
+        color #111
+
+      svg path
+        fill #111
+
+.img
+img
+  border-radius 10px
+  object-fit cover
+  position absolute
+  top 0
+  width 100%
+  height 100%
+  left 0
+  animation fadeIn 0.25s ease
+  z-index -1
+
+.img
+  opacity 0
+
+.info
+  cursor pointer
+  padding 0.5rem 0.5rem 0.5rem
+  text-align right
+  font-size 16px
+  font-family sans-serif
+  background 'rgba(%s, %s, %s, %s)' % (var(--red) var(--green) var(--blue) var(--alpha, 0))
+  transition background 0.25s ease
+  border 0
+  font-weight bold
+  display inline-block
+
+  &:hover
+    --alpha 1
+    ~ .img
+      --alpha 0
+
+@keyframes fadeIn
+  from
+    opacity 0
+
+.img:after
+  content ''
+  background 'rgba(%s, %s, %s, %s)' % (var(--red) var(--green) var(--blue) var(--alpha, 0.75))
+  position absolute
+  transition background 0.25s ease
+  top 0
+  right 0
+  bottom 0
+  left 0
+
+.input-invisible
+  position fixed
+  top 0
+  left 100%

@@ -1,0 +1,21 @@
+{
+  "name": "culr",
+  "version": "1.0.0",
+  "description": "culr API for grabbing colors via keyword",
+  "main": "culr.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "netlify",
+    "serverless",
+    "js"
+  ],
+  "author": "jh3y <jh3y@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "color": "^3.1.2",
+    "node-fetch": "^2.3.0",
+    "unsplash-js": "^6.0.0"
+  }
+}

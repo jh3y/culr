@@ -1,0 +1,26 @@
+{
+  "name": "culr",
+  "version": "1.0.0",
+  "description": "search colors by keyword",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:sw": " workbox generateSW workbox-config.js",
+    "build": "parcel build src/index.pug",
+    "postbuild": "npm run generate:sw",
+    "dev": "parcel src/index.pug"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dat.gui": "^0.7.7",
+    "gsap": "^3.4.0",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "pug": "^3.0.0",
+    "stylus": "^0.54.7",
+    "workbox-cli": "^5.1.3"
+  }
+}

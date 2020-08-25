@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useReducer } from 'react'
+import React, { useEffect, useState, useRef, useReducer, Fragment } from 'react'
 import { render } from 'react-dom'
 import { gsap } from 'gsap'
 import 'regenerator-runtime/runtime'
@@ -14,6 +14,7 @@ const initialState = {
 const ACTIONS = {
   SEARCH_NEW: 'SEARCH_NEW',
   SEARCH_RESULTS: 'SEARCH_RESULTS',
+  SEARCH_ERROR: 'SEARCH_ERROR',
   COPY: 'COPY',
 }
 
@@ -25,13 +26,22 @@ const colorSearchReducer = (state, action) => {
         searchTime: Date.now(),
         dataSet: state.dataSet,
         keyword: action.keyword,
+        error: false,
       }
     case ACTIONS.SEARCH_RESULTS:
-      return { searching: false, searchTime: null, dataSet: action.data }
+      return {
+        searching: false,
+        searchTime: null,
+        dataSet: action.data,
+        error: false,
+      }
+    case ACTIONS.SEARCH_ERROR:
+      return { searching: false, searchTime: null, dataSet: null, error: true }
     case ACTIONS.COPY:
       return {
         searching: false,
         searchTime: null,
+        error: false,
         dataSet: state.dataSet.map((c) => ({
           ...c,
           copiedHsl: c.color.hsl === action.color,
@@ -48,15 +58,20 @@ const colorSearchReducer = (state, action) => {
 const URL = '/.netlify/functions/culr'
 const useColorSearch = () => {
   const searchResults = useRef(null)
-  const [{ searchTime, searching, dataSet, keyword }, dispatch] = useReducer(
-    colorSearchReducer,
-    initialState
-  )
+  const [
+    { searchTime, searching, dataSet, keyword, error },
+    dispatch,
+  ] = useReducer(colorSearchReducer, initialState)
   const grabImages = async (keyword) => {
     if (!keyword) return
-    const data = await (await (await fetch(`${URL}/?search=${keyword}`)).json())
-      .images
-    dispatch({ type: ACTIONS.SEARCH_RESULTS, data })
+    const resp = await fetch(`${URL}/?search=${keyword}`)
+    if (resp.status === 500)
+      dispatch({ type: ACTIONS.SEARCH_ERROR, status: 500 })
+    else {
+      const data = await (await resp.json()).images
+      console.info(data)
+      dispatch({ type: ACTIONS.SEARCH_RESULTS, data })
+    }
   }
   useEffect(() => {
     grabImages(keyword)
@@ -78,7 +93,7 @@ const useColorSearch = () => {
     input.remove()
     dispatch({ type: ACTIONS.COPY, color })
   }
-  return [dataSet, searching, search, copy]
+  return [dataSet, searching, search, copy, error]
 }
 
 const App = () => {
@@ -90,7 +105,7 @@ const App = () => {
   const selectedImageRef = useRef(null)
   const colorRef = useRef(null)
   const formRef = useRef(null)
-  const [data, searching, search, copy] = useColorSearch()
+  const [data, searching, search, copy, error] = useColorSearch()
 
   const unset = () => {
     setSelected(null)
@@ -224,7 +239,7 @@ const App = () => {
               }}
               onClick={() => setSelected({ index, data: data[index] })}></div>
           ))}
-        {data && data.length !== 0 && selected && (
+        {data && data.length !== 0 && selected && !error && (
           <div
             ref={selectedRef}
             className={`color--selected ${
@@ -282,8 +297,17 @@ const App = () => {
             </div>
           </div>
         )}
-        {data && data.length === 0 && <h1>No results! 😭</h1>}
+        {data && data.length === 0 && <h2>No results! 😭</h2>}
       </div>
+      {error && (
+        <Fragment>
+          <h2>Oh no! 😭</h2>
+          <h3>
+            Seems we hit an error. It's likely we hit the API Rate Limit for the
+            hour again.
+          </h3>
+        </Fragment>
+      )}
     </div>
   )
 }

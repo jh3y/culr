@@ -22,7 +22,7 @@
     "unsplash-js": "^6.0.0"
   },
   "devDependencies": {
-    "pug": "^3.0.0",
+    "pug": "^3.0.1",
     "stylus": "^0.54.7",
     "workbox-cli": "^5.1.3"
   }
